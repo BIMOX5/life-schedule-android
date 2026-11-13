@@ -1,0 +1,14 @@
+{
+  "appId": "lt.lifeschedule.app",
+  "appName": "Life Schedule",
+  "webDir": "www",
+  "server": {
+    "url": "https://bimox5.github.io/life-schedule/",
+    "androidScheme": "https",
+    "allowNavigation": ["bimox5.github.io", "*.supabase.co"]
+  },
+  "android": {
+    "useLegacyBridge": true,
+    "backgroundColor": "#000000"
+  }
+}

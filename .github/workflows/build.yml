@@ -1,0 +1,56 @@
+name: Android programėlė
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@v3
+
+      - name: Priklausomybės
+        run: npm install --no-audit --no-fund
+
+      - name: Android projektas
+        run: |
+          npx cap add android
+          node scripts/patch-android.js
+          npx cap sync android
+        env:
+          BUILD_NO: ${{ github.run_number }}
+          APP_VER: 1.0.${{ github.run_number }}
+
+      - name: Pasirašymo raktas
+        run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > android/app/release.p12
+
+      - name: APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+          cp app/build/outputs/apk/release/app-release.apk ../life-schedule.apk
+        env:
+          KS_FILE: release.p12
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          KS_ALIAS: lifeschedule
+
+      - name: Paskelbti (Releases → latest)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest life-schedule.apk --title "Life Schedule programėlė (1.0.${{ github.run_number }})" --notes "Atsisiųsk life-schedule.apk ir įdiek telefone."

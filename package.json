@@ -1,0 +1,18 @@
+{
+  "name": "life-schedule-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Life Schedule – Android programėlė (Capacitor apvalkalas su Health Connect ir GPS fone)",
+  "scripts": {
+    "patch": "node scripts/patch-android.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.2",
+    "@capacitor/core": "8.6.2",
+    "@capgo/capacitor-health": "8.12.3",
+    "@capacitor-community/background-geolocation": "1.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.2"
+  }
+}
