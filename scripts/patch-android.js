@@ -55,4 +55,6 @@ if (!g.includes('signingConfigs')) {
 }
 g = g.replace(/versionCode \d+/, `versionCode ${parseInt(process.env.BUILD_NO || '1', 10)}`).replace(/versionName "[^"]*"/, `versionName "${process.env.APP_VER || '1.0'}"`);
 fs.writeFileSync(bg, g);
+// 5. Health Connect reikalauja Android 8+ (minSdk 26)
+const vg = path.join(__dirname, '..', 'android', 'variables.gradle'); if (fs.existsSync(vg)) fs.writeFileSync(vg, fs.readFileSync(vg, 'utf8').replace(/minSdkVersion\s*=\s*\d+/, 'minSdkVersion = 26'));
 console.log('android patched');
