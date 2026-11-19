@@ -8,7 +8,7 @@ cp(path.join(__dirname, '..', 'assets', 'res'), path.join(MAIN, 'res'));
 
 // 2. leidimai
 const mf = path.join(MAIN, 'AndroidManifest.xml'); let m = fs.readFileSync(mf, 'utf8');
-const perms = ['android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.FOREGROUND_SERVICE', 'android.permission.FOREGROUND_SERVICE_LOCATION', 'android.permission.POST_NOTIFICATIONS',
+const perms = ['android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.FOREGROUND_SERVICE', 'android.permission.FOREGROUND_SERVICE_LOCATION', 'android.permission.POST_NOTIFICATIONS', 'android.permission.RECORD_AUDIO', 'android.permission.MODIFY_AUDIO_SETTINGS',
   'android.permission.health.READ_STEPS', 'android.permission.health.READ_DISTANCE', 'android.permission.health.READ_ACTIVE_CALORIES_BURNED', 'android.permission.health.READ_HEART_RATE', 'android.permission.health.READ_EXERCISE', 'android.permission.health.READ_HEALTH_DATA_HISTORY'];
 for (const p of perms) if (!m.includes(`"${p}"`)) m = m.replace('</manifest>', `    <uses-permission android:name="${p}" />\n</manifest>`);
 // Health Connect: kodėl reikia leidimų (Android 14+) – rodo privatumo puslapį
