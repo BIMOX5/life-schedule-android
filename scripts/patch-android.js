@@ -57,4 +57,21 @@ g = g.replace(/versionCode \d+/, `versionCode ${parseInt(process.env.BUILD_NO ||
 fs.writeFileSync(bg, g);
 // 5. Health Connect reikalauja Android 8+ (minSdk 26)
 const vg = path.join(__dirname, '..', 'android', 'variables.gradle'); if (fs.existsSync(vg)) fs.writeFileSync(vg, fs.readFileSync(vg, 'utf8').replace(/minSdkVersion\s*=\s*\d+/, 'minSdkVersion = 26'));
+// 6. Laisvės valdiklis (pagrindinio ekrano): Java klasės, išdėstymas, gavėjas manifeste, įskiepis MainActivity
+const NAT = path.join(__dirname, '..', 'native'), JAVA = path.join(MAIN, 'java', 'lt', 'lifeschedule', 'app');
+fs.mkdirSync(JAVA, {recursive: true});
+for (const f of fs.readdirSync(path.join(NAT, 'java'))) fs.copyFileSync(path.join(NAT, 'java', f), path.join(JAVA, f));
+cp(path.join(NAT, 'res'), path.join(MAIN, 'res'));
+m = fs.readFileSync(mf, 'utf8');
+if (!m.includes('.LsWidget"')) m = m.replace('</application>', `        <receiver android:name=".LsWidget" android:exported="false" android:label="Laisvė">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/ls_widget_info" />
+        </receiver>
+    </application>`);
+fs.writeFileSync(mf, m);
+s = fs.readFileSync(sx, 'utf8');
+if (!s.includes('name="ls_widget_desc"')) s = s.replace('</resources>', '    <string name="ls_widget_desc">Laisvės takas, dienos ir +1</string>\n</resources>');
+fs.writeFileSync(sx, s);
 console.log('android patched');
