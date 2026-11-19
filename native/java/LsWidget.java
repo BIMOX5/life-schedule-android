@@ -71,8 +71,9 @@ public class LsWidget extends AppWidgetProvider {
         try {
             JSONObject d = new JSONObject(c.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString("data", "{}"));
             if (!d.optBoolean("on")) {
-                v.setTextViewText(R.id.lsw_days, "Laisvė");
-                v.setTextViewText(R.id.lsw_sub, "Atidaryk programėlę");
+                v.setTextViewText(R.id.lsw_days, d.optString("days", "Laisvė"));
+                v.setTextViewText(R.id.lsw_sub, d.optString("sub", "Atidaryk programėlę"));
+                v.setImageViewResource(R.id.lsw_img, R.drawable.ls_widget_bg);
                 for (int b : bid) v.setViewVisibility(b, View.GONE);
                 return v;
             }
